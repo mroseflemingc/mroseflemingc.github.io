@@ -1,9 +1,69 @@
+<!-- This is an ArcGIS Tutorial Project-->
 <!DOCTYPE html>
 <html>
-<body>
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="initial-scale=1, maximum-scale=1, user-scalable=no">
+    <title>ArcGIS JavaScript Tutorials: Create a JavaScript starter app</title>
+    <style>
+      html, body, #viewDiv {
+        padding: 0;
+        margin: 0;
+        height: 100%;
+        width: 100%;
+      }
+    </style>
+    <link rel="stylesheet" href="https://js.arcgis.com/4.13/esri/themes/light/main.css">
+  <script src="https://js.arcgis.com/4.13/"></script>
+    <script>
+  require([
+      "esri/WebMap",
+      "esri/views/MapView",
+    "esri/widgets/Locate",
+    "esri/layers/GraphicsLayer",
+    "esri/widgets/Sketch"
+    ], function(WebMap, MapView, Locate, GraphicsLayer, Sketch) {
 
-<h1>My Second Heading</h1>
-<p>My first paragraph.</p>
+    var webmap = new WebMap({
+        portalItem: {
+          id: "e84fd402fd9145b7bd5f3109b0d6a997",
+          basemap: "streets-navigation-vector"
+        }
+      });
 
-</body>
+      var view = new MapView({
+        container: "viewDiv",
+        //*** UPDATE ***//
+        map: webmap,
+        //center: [-118.80500,34.02700],
+        //zoom: 13
+
+        
+    });
+    var locate = new Locate({
+        view: view,
+        useHeadingEnabled: false,
+        goToOverride: function(view, options) {
+          options.target.scale = 1500;  // Override the default map scale
+          return view.goTo(options.target);
+        }
+      });
+
+      view.ui.add(locate, "top-left");
+    //Test Graphics
+    var graphicsLayer = new GraphicsLayer();
+    webmap.add(graphicsLayer);
+    
+    var sketch = new Sketch({
+        view: view,
+        layer: graphicsLayer
+      });
+
+      view.ui.add(sketch, "top-right");
+  });
+  </script>
+  </head>
+  <body>
+    <div id="viewDiv"></div>
+  </body>
 </html>
